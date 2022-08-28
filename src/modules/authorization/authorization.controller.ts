@@ -2,23 +2,27 @@ import { Controller, Post, Body, Get } from '@nestjs/common';
 import { Request } from 'express';
 
 import { RegisterUserDto } from './authorization.dto';
-import {UserService} from '../user/user.service';
+
+import { UserService } from '../user/user.service';
+import { AuthorizationService } from './authorization.service';
 
 
 @Controller('')
 export class AuthorizationController {
 
-  constructor(private userService: UserService){}
+  constructor(private authenticationService: AuthorizationService, private userService: UserService){}
 
   @Post('register')
   async register(@Body() newUserDto: RegisterUserDto): Promise<string> {
-    console.log(newUserDto)
-    debugger
+    console.log('--------',newUserDto) 
     // First create new user
     let newUser = await this.userService.createNewUser(newUserDto);
     if(newUser){
-      console.log("New user has been register")
+
+      console.log("New user has been register", newUser)
     }
+
+    let newUserAuth = await this.authenticationService.registerUser(newUser._id, newUserDto.password)
     
     // Create user for authentication (i.e: username & password)
     

@@ -4,11 +4,10 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
 import { User } from '../../user/entities/user.entity';
-
 @Schema()
 export class Authentication extends Document {
-    @Prop({ type: MongooseSchema.Types.ObjectId, ref: User.name })
-    user: MongooseSchema.Types.ObjectId;
+    @Prop({ type: MongooseSchema.Types.ObjectId })
+    user_id: MongooseSchema.Types.ObjectId;
 
     @Prop({ default: Date.now })
     updatedAt: Date;

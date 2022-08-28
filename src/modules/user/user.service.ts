@@ -1,20 +1,21 @@
 import { Model } from 'mongoose';
-
-import { Injectable, Inject } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { User} from './entities/user.entity'
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UserService{
-    constructor(@Inject('USER_MODEL') private userModel: Model<any>){}
+    constructor(@InjectModel(User.name) private userModel: Model<User>){}
 
     
-    async createNewUser(user: any): Promise<any>{
+    async createNewUser(user: any): Promise<User>{
         // TODO: Create and assign interface for user
         
         try{
-            debugger
             const newUser = new this.userModel(user);
-            return newUser.save();
+            return await newUser.save();
         }catch(error){
+            console.log(error);
             return error;
             
         }
