@@ -10,37 +10,39 @@ import { AuthorizationService } from './authorization.service';
 @Controller('')
 export class AuthorizationController {
 
-  constructor(private authenticationService: AuthorizationService, private userService: UserService){}
+  constructor(private authenticationService: AuthorizationService, private userService: UserService) { }
 
   @Post('register')
-  async register(@Body() newUserDto: RegisterUserDto): Promise<string> {
-    console.log('--------',newUserDto) 
+  async register(@Body() newUserDto: RegisterUserDto): Promise<any> {
     // First create new user
-    let newUser = await this.userService.createNewUser(newUserDto);
-    if(newUser){
+    try {
+      let newUser = await this.userService.createNewUser(newUserDto);
+      if (newUser) {
+        await this.authenticationService.registerUser(newUser._id, newUserDto.password)
+      }
 
-      console.log("New user has been register", newUser)
+      // TODO: Before return response, send welcome email to new user
+      return {
+        success: true,
+        message: "Congratulation an account with " + newUser.email + ' has been successfully created!'
+      };
+    } catch (error) {
+
     }
-
-    let newUserAuth = await this.authenticationService.registerUser(newUser._id, newUserDto.password)
-    
-    // Create user for authentication (i.e: username & password)
-    
-    return 'This action returns all cats';
   }
 
 
   @Post('login')
-  login(){
+  login() {
 
     // Step 1: Check email & password
     // Step 2: Create Session
-    
+
     return 'You are successfully loggedIn'
   }
 
   @Get('authorize')
-  checkAuthorize(){
+  checkAuthorize() {
     // Step 1: Check the old token is valid or not
     // Step 2: If valid then expire it
     // Step 3: Send new token 

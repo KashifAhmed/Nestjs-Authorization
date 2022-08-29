@@ -17,7 +17,9 @@ export class Authentication extends Document {
 
     @Prop({ required: true })
     password: string
-    
+
+    @Prop({ type: Boolean, default: false})
+    is_deleted: Boolean
 }
 
 export const AuthenticationSchema = SchemaFactory.createForClass(Authentication);
